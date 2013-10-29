@@ -1,0 +1,95 @@
+\chapter{Implementierung}
+
+\section{ToDo}
+
+Um ToDos anzuzeigen können alle Befehle des Packages \enquote{todonotes} genutzt werden.
+Zur Einfachheit können folgende Befehle genutzt werden:
+
+\begin{verbatim}
+\mytodo{Kapitel über Krokodile schreiben!}
+\mytodoimprove{Neue Quellen raussuchen!}
+\end{verbatim}
+
+\mytodo{Kapitel über Krokodile schreiben!}
+\mytodoimprove{Neue Quellen raussuchen!}
+
+\section{Literaturverzeichnis}
+
+Das Literaturverzeichnis generiert die Einträge nach DIN 1502-2. Die Styles sind in der alphadin.bst\footnote{\url{http://mirror.unl.edu/ctan/biblio/bibtex/contrib/german/din1505/alphadin.bst}} zu finden.
+
+Beispiele \cite{web:wiki:latex,book:komascript}
+
+\section{Verzeichnisse}
+
+Dieses Template erstellt einige Verzeichnisse, wie sie entsprechend der DHBW-Richtlinien benötigt werden: Inhaltsverzeichnis, Abbildungsverzeichnis, Tabellenverzeichnis, Abkürzungsverzeichnis und Codeverzeichnis
+
+Zur Demonstration einige Beispiele:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{Images/placeholder.png}
+\caption{Ich bin ein tolles Bild!}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ll}
+	\textbf{Kopfspalte 1} & \textbf{Kopfspalte 2} \\ \hline\hline
+	Ich bin               & eine tolle Tabelle!   \\ \hline
+	Bin ich               & nicht wundervoll?
+\end{tabular}
+\caption{Eine tolle Tabelle}
+\end{table}
+
+\section{Source code}
+
+Gerade im IT-Bereich kommt es oft vor, dass Source eingebunden werden soll. Natürlich schön mit Syntax-Highlighting. 
+Dieses Template unterstütz dies mit Hilfe von minted und pygments. Die Einrichtung dafür ist beschrieben unter \url{http://www.manuel-rauber.com/post/2013/10/28/My-LaTeX-Environment}.
+Des Weiteren ist das Template in der Lage, lange Zeilen umzubrechen\footnote{Allerdings hat die Funktion noch einen Bug: \url{http://tex.stackexchange.com/questions/129383/break-lines-in-minted-code}. Bei bereits eingerücktem Code werden die \enquote{Umbruchpfeile} falsch dargestellt.}, sowie Captions und Boxen anzuzeigen. Zu lange Code-Stücke werden automatisch auf die nächste Seite umgebrochen, was man auch visuell sehen kann. Hier für ein längeres Code-Beispiel:
+
+\begin{listingsbox}{mycsharplinenos}{Beispiel-Code}
+using System;
+using System.IO;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Formatting;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ShortUrl.Core.Formatters
+{
+	public class TextMediaTypeFormatter : MediaTypeFormatter
+	{
+		public TextMediaTypeFormatter()
+		{
+			SupportedEncodings.Add(Encoding.UTF8);
+		}
+
+		public override Task WriteToStreamAsync(Type type, object value, Stream writeStream, HttpContent content,
+			TransportContext transportContext)
+		{
+			return Task.Factory.StartNew(() =>
+			{
+
+				var str = (string)value;
+
+				using (var textWriter = new StreamWriter(writeStream))
+				{
+					textWriter.Write(str);
+				}
+			});
+		}
+
+		public override bool CanReadType(Type type)
+		{
+			return false;
+		}
+
+		public override bool CanWriteType(Type type)
+		{
+			return typeof(string) == type;
+		}
+	}
+}
+\end{listingsbox}
