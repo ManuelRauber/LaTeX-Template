@@ -12,36 +12,50 @@ BCOR6mm,						% Bindekorrektur, die den Seitenspiegel um 6mm nach rechts verschi
 toc=listof,
 parskip=full,
 ngerman,
-]{scrreprt}	
-\usepackage{tabularx}		
+]{scrreprt}		
+\usepackage{morewrites}			% Mehr Write-Streams für LaTeX
+\usepackage{tabularx}			% Bessere Tabellenunterstützung
 \usepackage{ucs} 				% Dokument in utf8-Codierung schreiben und speichern
 \usepackage[utf8x]{inputenc} 	% ermöglicht die direkte Eingabe von Umlauten
 \usepackage[ngerman]{babel} 	% deutsche Trennungsregeln und Übersetzung der festcodierten Überschriften
 \usepackage[T1]{fontenc} 		% Ausgabe aller zeichen in einer T1-Codierung (wichtig für die Ausgabe von Umlauten!)
 \usepackage{graphicx}  			% Einbinden von Grafiken erlauben
 \usepackage{amsmath}
-%\usepackage{amsfonts}
-%\usepackage{amssymb}
-\usepackage[most]{tcolorbox}
 \usepackage{mathpazo} 			% Einstellung der verwendeten Schriftarten
 \usepackage{textcomp} 			% zum Einsatz von Eurozeichen u. a. Symbolen
 \usepackage{xcolor} 			% einfache Verwendung von Farben in nahezu allen Farbmodellen
-\usepackage{fancyhdr}			% Zusatzpaket zur Gestaltung von Fuß und Kopfzeilen
-\usepackage[babel,german=quotes]{csquotes}
-\usepackage{setspace}
-\usepackage[all]{nowidow}
+\usepackage[babel,german=quotes]{csquotes}	% \enquote
+\usepackage{setspace}			% Spacing
+\usepackage[all]{nowidow}		% Keine Hurenkinder und Schusterjungen
 \usepackage{float}
-\usepackage[format=plain,indention=0.5cm,hypcap=true]{caption}
-\usepackage{paralist}
-\usepackage{varioref}
-\usepackage{hyperref}
+\usepackage[format=plain,indention=0.5cm,hypcap=true]{caption} % Bessere Captions
+\usepackage{paralist}			% Bessere List Environment
+\usepackage{varioref}			% Ref
+\usepackage{hyperref}			
 \usepackage{translator}
 \usepackage[toc,acronym]{glossaries} 	% zur Erstellung des Abkürzungsberzeichnisses
-\usepackage{minted}
 \usepackage[nameinlink]{cleveref}
 \usepackage[nottoc]{tocbibind}
 \usepackage[german,colorinlistoftodos]{todonotes}
 \usepackage{pdfpages}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{subfigure}
+\usepackage{enumitem}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{tikz}
+\usetikzlibrary{arrows, shapes, decorations, shapes.geometric, positioning, calc}
+\usepackage{ifthen}
+\usepackage{xstring}
+%\usepackage{tikz-uml} % Doku: http://perso.ensta-paristech.fr/~kielbasi/tikzuml/doc/tikzuml-v0.9.9.pdf
+\usepackage[space]{grffile}
+\usepackage[automark]{scrlayer-scrpage}
+\usepackage{multirow}
+\usepackage{ifdraft}
+\usepackage[many,minted]{tcolorbox}
+\ifdraft{\usepackage{refcheck}}
+\usepackage{placeins}
 
 % spacing von matheumgebungen
 
@@ -80,142 +94,46 @@ ngerman,
 % inline code
 \newcommand{\myinlinecode}[1]{\footnotesize\texttt{#1}\normalsize}
 
+% Minted Einstellungen %
+
+\newcommand{\mynewminted}[3]{%
+  \newminted[#1]{#2}{#3}%
+  \tcbset{myminted/#1/.style={minted language=#2,minted options={#3}}}}
+
+\mynewminted{mycsharp}{csharp}{tabsize=2,fontsize=\footnotesize}
+\mynewminted{myjavascript}{js}{tabsize=2,fontsize=\footnotesize}
+\mynewminted{myxml}{xml}{tabsize=2,fontsize=\footnotesize}
+\mynewminted{myshell}{shell-session}{tabsize=2,fontsize=\footnotesize}
+\mynewminted{myjson}{json}{tabsize=2,fontsize=\footnotesize}
+\mynewminted{mycode}{text}{tabsize=2,fontsize=\footnotesize}
+
+\newtcblisting[auto counter,number within=section,
+  list inside=mypyg]{listingsbox}[3][]{%
+  listing only,title={Listing \thetcbcounter: #3},
+  list entry={\protect\numberline{\thetcbcounter}#3},
+  enhanced,breakable,drop fuzzy shadow,myminted/#2,#1}
+  
+\renewcommand\listoflistingscaption{Codeverzeichnis}
+
+% cref für minted listings
+
+\makeatletter
+\crefname{tcb@cnt@listingsbox}{Listing}{Listings}
+\Crefname{tcb@cnt@listingsbox}{Listing}{Listings}
+\makeatother
+
 % Definition der Kopf- und Fußzeilen
-\lhead{}								% Kopf links
-\chead{}								% Kopf mitte
-\rhead{\sffamily{\titel}}				% Kopf rechts
-\lfoot{}								% Fuß links
-\cfoot{\sffamily{\thepage}}				% Fuß mitte
-\rfoot{\sffamily{\autor}}				% Fuß rechts
-\renewcommand{\headrulewidth}{0.4pt}	% Liniendicke Kopf
-\renewcommand{\footrulewidth}{0.4pt}	% Liniendicke Fuß
+\pagestyle{scrheadings}
+\automark[chapter]{chapter}
+\rohead{\titel}
+\cohead{}
+\lohead{\headmark}
+\rofoot{\autor}
 
 \makeglossaries							% Abkürzungsverzeichnis erstellen
 \input{Content/abkuerzungen}					% Datei mit Abkürzungen laden
 \input{Content/glossar}					% Glossar laden
 
-% Fix für minted, sodass unicode möglich ist
-% http://tex.stackexchange.com/a/84883/15907
-
-\makeatletter
-\newcommand{\minted@write@detok}[1]{%
-  \immediate\write\FV@OutFile{\detokenize{#1}}}%
-
-\newcommand{\minted@FVB@VerbatimOut}[1]{%
-  \@bsphack
-  \begingroup
-    \FV@UseKeyValues
-    \FV@DefineWhiteSpace
-    \def\FV@Space{\space}%
-    \FV@DefineTabOut
-    %\def\FV@ProcessLine{\immediate\write\FV@OutFile}% %Old, non-Unicode version
-    \let\FV@ProcessLine\minted@write@detok %Patch for Unicode
-    \immediate\openout\FV@OutFile #1\relax
-    \let\FV@FontScanPrep\relax
-%% DG/SR modification begin - May. 18, 1998 (to avoid problems with ligatures)
-    \let\@noligs\relax
-%% DG/SR modification end
-    \FV@Scan}
-    \let\FVB@VerbatimOut\minted@FVB@VerbatimOut
-
-\renewcommand\minted@savecode[1]{
-  \immediate\openout\minted@code\jobname.pyg
-  \immediate\write\minted@code{\expandafter\detokenize\expandafter{#1}}%
-  \immediate\closeout\minted@code}
-\makeatother
-
-% Minted Einstellungen %
-
-\newminted[mycsharp]{csharp}{tabsize=2,fontsize=\footnotesize}
-\newminted[mycsharplinenos]{csharp}{tabsize=2,xleftmargin=0.5cm,linenos,fontsize=\footnotesize}
-\newminted[myjson]{js}{tabsize=2,fontsize=\footnotesize}
-\newminted[myxml]{xml}{tabsize=2,fontsize=\footnotesize}
-\newminted[myshell]{shell-session}{tabsize=2,fontsize=\footnotesize}
-\newminted[mycode]{text}{tabsize=2,fontsize=\footnotesize}
-\newminted[mycodelinenos]{text}{linenos,xleftmargin=0.5cm,tabsize=2,fontsize=\footnotesize}
-\newminted[myruby]{ruby}{tabsize=2,fontsize=\footnotesize}
-\renewcommand\listoflistingscaption{Codeverzeichnis}
-
-% cref für minted listings
-% http://tex.stackexchange.com/a/125029/15907
-
-\makeatletter
-\crefname{tcb@cnt@mintedbox}{Listing}{Listings}
-\Crefname{tcb@cnt@mintedbox}{Listing}{Listings}
-\makeatother
-
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-% % % Special Hack for getting minted to break lines
-% http://tex.stackexchange.com/a/112573/15907
-
-\usepackage{lineno}
-\def\gobble#1{}
-\renewcommand\DeleteFile[1]{}
-\usepackage{xparse}
-\ExplSyntaxOn
-\box_new:N \l_fvrb_box
-\tl_new:N \l_fvrb_tl
-
-\RenewDocumentCommand \FancyVerbFormatLine { m }
- {
-   \hbox_set:Nn \l_fvrb_box { #1 }
-    \dim_compare:nNnTF { \box_wd:N \l_fvrb_box }>{ \linewidth }
-      {%box to big 
-       \tl_set:Nn \l_fvrb_tl { #1 }
-       \fvrb_use_tl:N \l_fvrb_tl
-      } 
-      {%box fits
-       \box_use:N \l_fvrb_box
-      }
- }
-
-\cs_new:Npn \fvrb_use_tl:N  #1
- {
-  \group_begin:
-   \null\hfill\vbox_set:Nn \l_fvrb_box
-     {\hsize=\linewidth
-      \renewcommand\thelinenumber
-           {
-             \ifnum\value{linenumber}=1\relax\else
-                  $\rightarrow$
-             \fi
-           }
-      \begin{internallinenumbers}
-        \advance\hsize by -2em
-        \hspace*{-2em}\tl_use:N #1
-      \end{internallinenumbers}
-     }
-   \box_use:N \l_fvrb_box
-  \group_end:
-}
-
-\ExplSyntaxOff
-
-\usepackage{etoolbox}
-
-% % % End of hack
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-
-% Special listingsbox
-% http://tex.stackexchange.com/a/124688/15907
-\newenvironment{listingsbox}[3][]
- {%
-   \def\listingsboxenvironment{#2}%save the environments
-   \VerbatimEnvironment%
-   \begin{mintedbox}[#1]{#3}%
-     \begin{\listingsboxenvironment}}%
- {%
-  \end{\listingsboxenvironment}%
-  \end{mintedbox}%
-}
-
-\newtcolorbox[auto counter,
-  list inside=mypyg]{mintedbox}[2][]{%
-  title={Listing \thetcbcounter: #2},
-  list entry={\numberline{\thetcbcounter}#2},
-  enlarge right by={-0.5cm}, % no overfull hboxes for listing
-  enhanced,breakable,#1}
-  
 % Mathe nur in Displaymode anzeigen
 \everymath{\displaystyle}
 
@@ -250,8 +168,7 @@ ngerman,
 % --------------------------------------------------------------------------------------------
 %                    Content der Bachelorarbeit
 %---------------------------------------------------------------------------------------------
-\pagenumbering{arabic}						% arabische Seitenzahlen für den Hauptteil
-\pagestyle{fancy}					
+\pagenumbering{arabic}						% arabische Seitenzahlen für den Hauptteil				
 \rmfamily
 \onehalfspacing
 % Schusterjungen und Hurenkinder 
