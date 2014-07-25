@@ -94,6 +94,26 @@ namespace ShortUrl.Core.Formatters
 }
 \end{listingsbox}
 
+\section{Algorithmen}
+
+Mit dem Package \enquote{algorithm} können Algorithmen schön dargestellt werden.
+Entsprechend wird auch eine Algorithmenverzeichnis erstellt.
+
+\begin{algorithm}
+\caption{Euclid's algorithm}\label{euclid}
+\begin{algorithmic}[1]
+\Procedure{Euclid}{$a,b$}\Comment{The g.c.d. of a and b}
+	\State $r\gets a\bmod b$
+	\While{$r\not=0$}\Comment{We have the answer if r is 0}
+		\State $a\gets b$
+		\State $b\gets r$
+		\State $r\gets a\bmod b$
+	\EndWhile\label{euclidendwhile}
+	\State \textbf{return} $b$\Comment{The gcd is b}
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
 \section{Glossar}
 
 Der Aufbau eines Glossar wird entsprechend durch das Package \enquote{glossaries}\footnote{\url{http://www.ctan.org/tex-archive/macros/latex/contrib/glossaries/}} unterstützt.

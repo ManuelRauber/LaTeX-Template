@@ -55,7 +55,7 @@ ngerman,
 \usepackage{ifdraft}
 \usepackage[many,minted]{tcolorbox}
 \ifdraft{\usepackage{refcheck}}
-\usepackage{placeins}
+\usepackage{placeins}			% \FloatBarrier
 
 % spacing von matheumgebungen
 
@@ -161,6 +161,7 @@ ngerman,
 \listoftables 								% Erzeugen des Tabellenverzeichnisses
 \tcblistof[\addchap*]{mypyg}{Codeverzeichnis} % Erzeugen eines Verzeichnisses für Code
 \addcontentsline{toc}{chapter}{Codeverzeichnis}
+\listofalgorithms
 \todototoc
 \listoftodos
 \clearpage
