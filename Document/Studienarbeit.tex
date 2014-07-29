@@ -35,7 +35,6 @@ ngerman,
 \usepackage{translator}
 \usepackage[toc,acronym]{glossaries} 	% zur Erstellung des Abkürzungsberzeichnisses
 \usepackage[nameinlink]{cleveref}
-\usepackage[nottoc]{tocbibind}
 \usepackage[german,colorinlistoftodos]{todonotes}
 \usepackage{pdfpages}
 \usepackage{array}
@@ -193,6 +192,7 @@ ngerman,
 \pagenumbering{Roman}						% römische Seitenzahlen für Anhang
 
 % Bibliographie nach DIN 1502-2
+\addcontentsline{toc}{chapter}{Literaturverzeichnis}
 \bibliographystyle{alphadin} 
 \bibliography{Bibliography}
 \clearpage
