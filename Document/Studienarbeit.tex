@@ -15,8 +15,7 @@ ngerman,
 ]{scrreprt}		
 \usepackage{morewrites}			% Mehr Write-Streams für LaTeX
 \usepackage{tabularx}			% Bessere Tabellenunterstützung
-\usepackage{ucs} 				% Dokument in utf8-Codierung schreiben und speichern
-\usepackage[utf8x]{inputenc} 	% ermöglicht die direkte Eingabe von Umlauten
+\usepackage[utf8]{inputenc} 	% ermöglicht die direkte Eingabe von Umlauten
 \usepackage[ngerman]{babel} 	% deutsche Trennungsregeln und Übersetzung der festcodierten Überschriften
 \usepackage[T1]{fontenc} 		% Ausgabe aller zeichen in einer T1-Codierung (wichtig für die Ausgabe von Umlauten!)
 \usepackage{graphicx}  			% Einbinden von Grafiken erlauben
@@ -33,7 +32,7 @@ ngerman,
 \usepackage{varioref}			% Ref
 \usepackage{hyperref}			
 \usepackage{translator}
-\usepackage[toc,acronym]{glossaries} 	% zur Erstellung des Abkürzungsberzeichnisses
+\usepackage[toc,acronym,nomain]{glossaries} 	% zur Erstellung des Abkürzungsberzeichnisses
 \usepackage[nameinlink]{cleveref}
 \usepackage[german,colorinlistoftodos]{todonotes}
 \usepackage{pdfpages}
@@ -55,6 +54,10 @@ ngerman,
 \usepackage[many,minted]{tcolorbox}
 \ifdraft{\usepackage{refcheck}}
 \usepackage{placeins}			% \FloatBarrier
+
+% Bibliography
+\usepackage[style=alphabetic]{biblatex}
+\addbibresource{Bibliography.bib}
 
 % spacing von matheumgebungen
 
@@ -171,9 +174,6 @@ ngerman,
 \pagenumbering{arabic}						% arabische Seitenzahlen für den Hauptteil				
 \rmfamily
 \onehalfspacing
-% Schusterjungen und Hurenkinder 
-%\clubpenalty = 10000
-%\widowpenalty = 10000 \displaywidowpenalty = 10000
 \interfootnotelinepenalty=10000 % Keine FUßnoten umbrechen
 \include{Content/einleitung}
 \clearpage
@@ -191,10 +191,7 @@ ngerman,
 \clearpage
 \pagenumbering{Roman}						% römische Seitenzahlen für Anhang
 
-% Bibliographie nach DIN 1502-2
-\addcontentsline{toc}{chapter}{Literaturverzeichnis}
-\bibliographystyle{alphadin} 
-\bibliography{Bibliography}
+\printbibliography[heading=bibintoc]
 \clearpage
 \printglossary
 \end{document}
